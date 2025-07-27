@@ -1,0 +1,147 @@
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", sans-serif;
+  background-color: #f0dfdf;
+  padding: 20px;
+  color: #333;
+}
+
+main {
+  max-width: 600px;
+  margin: 0 auto;
+  background-color: #519e93;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  text-align: center;
+  color: #0e0e0f;
+  margin-bottom: 25px;
+}
+
+/* Formulario */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+form input {
+  padding: 12px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  transition: border 0.3s ease;
+}
+
+form input:focus {
+  outline: none;
+  border-color: #0077cc;
+}
+
+form button {
+  padding: 12px;
+  background-color: #1336bf;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+form button:hover {
+  background-color: #76e92a;
+}
+
+/* Lista de productos */
+#inventory-list {
+  display: grid;
+  gap: 12px;
+}
+
+.product-card {
+  background-color: #e9f5ff;
+  border-left: 5px solid #a6c1d4;
+  padding: 15px;
+  border-radius: 6px;
+  transition: transform 0.2s ease;
+}
+
+.product-card:hover {
+  transform: scale(1.01);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  main {
+    padding: 20px;
+  }
+
+  form input,
+  form button {
+    font-size: 0.95rem;
+  }
+}
+.product-card {
+  border: 1px solid #5ce21d;
+  padding: 1em;
+  margin-bottom: 1em;
+  border-radius: 8px;
+  background-color: #c8dcbe;
+}
+
+.product-card button {
+  margin-right: 0.1em;
+  color: #eaedef;
+}
+.edit-btn {
+  background-color: #2f4de4;
+  border: none;
+  padding: 0.5em 1em;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.edit-btn:hover {
+  background-color: #1db3d1;
+}
+.delete-btn {
+  background-color: #e42f2f;
+  border: none;
+  padding: 0.5em 1em;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.delete-btn:hover {
+  background-color: #c64fca;
+}
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  padding: 2rem;
+}
+
+.boton-registro,
+.boton-comenzar {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background-color: #39e41b;
+  color: rgb(0, 0, 0);
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+.boton-comenzar:hover,
+.boton-registro:hover {
+  background-color: #2f4de4;
+}
+

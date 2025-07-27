@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="stylesheet" href="style.css" />
+    
+  </head>
+  <body>
+    <div class="form-container">
+      <form id="loginForm">
+        <h2>Iniciar Sesión</h2>
+        <input type="text" id="loginUser" placeholder="Usuario" required />
+        <input
+          type="password"
+          id="loginPass"
+          placeholder="Contraseña"
+          required
+        />
+        <button type="submit" class="boton-comenzar">Iniciar Sesión</button>
+        <div class="switch">
+          ¿No tienes cuenta? <a href="registro.html">¡Regístrate!</a>
+        </div>
+      </form>
+    </div>
+
+    <script>
+      const loginForm = document.getElementById("loginForm");
+
+      // Iniciar sesión
+      loginForm.addEventListener("submit", async function (e) {
+        e.preventDefault();
+        
+        const username = document.getElementById("loginUser").value.trim();
+        const password = document.getElementById("loginPass").value.trim();
+
+        // Validación en frontend
+        if (!username || !password) {
+          alert("Por favor completa todos los campos");
+          return;
+        }
+
+        if (username.length < 3) {
+          alert("El usuario debe tener al menos 3 caracteres");
+          return;
+        }
+
+        if (password.length < 6) {
+          alert("La contraseña debe tener al menos 6 caracteres");
+          return;
+        }
+
+        try {
+          const response = await fetch('/api/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username, password })
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            alert("Inicio de sesión exitoso");
+            // Guardar datos del usuario para la sesión
+            sessionStorage.setItem('user', JSON.stringify(result.user));
+            window.location.href = "reg-producto.html";
+          } else {
+            alert(result.error || "Error al iniciar sesión");
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          alert("Error de conexión con el servidor");
+        }
+      });
+
+      // Limpiar campos si están vacíos al cargar
+      window.addEventListener('load', function() {
+        document.getElementById("loginUser").value = '';
+        document.getElementById("loginPass").value = '';
+      });
+    </script>
+  </body>
+</html>

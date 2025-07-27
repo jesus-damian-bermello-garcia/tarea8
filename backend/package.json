@@ -1,0 +1,23 @@
+{
+  "name": "inventario",
+  "version": "1.0.0",
+  "description": "Aplicación de inventario con Node.js y PostgreSQL",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "nodemon backend/server.js",
+    "server": "cd backend && node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "pg": "^8.11.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "keywords": ["inventario", "nodejs", "express", "postgresql"],
+  "author": "Damian",
+  "license": "MIT"
+}

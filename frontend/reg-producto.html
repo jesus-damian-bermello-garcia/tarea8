@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inventario App</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main>
+      <div class="header">
+        <h1>Gestión de Inventario</h1>
+        <div class="user-info">
+          <span id="welcomeUser">Bienvenido</span>
+          <button id="logoutBtn" class="logout-btn">Cerrar Sesión</button>
+        </div>
+      </div>
+
+      <form id="product-form">
+        <input type="text" id="productName" placeholder="Nombre del producto" required />
+        <input type="number" id="productQuantity" placeholder="Cantidad" required min="0" />
+        <input type="text" id="productDescription" placeholder="Descripción" />
+        <button type="submit">Guardar Producto</button>
+      </form>
+
+      <section id="inventory-list">
+        <h3>Productos en Inventario</h3>
+        <div id="products-container">
+          <!-- Aquí se mostrarán los productos -->
+        </div>
+      </section>
+    </main>
+
+    <script>
+      let currentUser = null;
+
+      // Verificar si hay usuario logueado
+      window.addEventListener('load', function() {
+        const userData = sessionStorage.getItem('user');
+        if (!userData) {
+          alert('Debes iniciar sesión primero');
+          window.location.href = 'index.html';
+          return;
+        }
+
+        currentUser = JSON.parse(userData);
+        document.getElementById('welcomeUser').textContent = `Bienvenido, ${currentUser.username}`;
+        
+        // Cargar productos del usuario
+        loadProducts();
+      });
+
+      // Cerrar sesión
+      document.getElementById('logoutBtn').addEventListener('click', function() {
+        sessionStorage.removeItem('user');
+        window.location.href = 'index.html';
+      });
+
+      // Manejar formulario de producto
+      document.getElementById('product-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const nombre = document.getElementById('productName').value.trim();
+        const cantidad = document.getElementById('productQuantity').value.trim();
+        const descripcion = document.getElementById('productDescription').value.trim();
+
+        // Validaciones
+        if (!nombre || !cantidad) {
+          alert('Por favor completa los campos obligatorios (Nombre y Cantidad)');
+          return;
+        }
+
+        if (parseInt(cantidad) < 0) {
+          alert('La cantidad no puede ser negativa');
+          return;
+        }
+
+        const productData = {
+          usuario_id: currentUser.id,
+          nombre: nombre,
+          cantidad: parseInt(cantidad),
+          descripcion: descripcion
+        };
+
+        try {
+          const response = await fetch('/api/productos', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(productData)
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            alert('Producto guardado exitosamente');
+            // Limpiar formulario
+            document.getElementById('product-form').reset();
+            // Recargar productos
+            loadProducts();
+          } else {
+            alert(result.error || 'Error al guardar producto');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          alert('Error de conexión con el servidor');
+        }
+      });
+
+      // Cargar productos del usuario
+      async function loadProducts() {
+        if (!currentUser) return;
+
+        try {
+          const response = await fetch(`/api/productos/${currentUser.id}`);
+          const result = await response.json();
+
+          if (result.success) {
+            displayProducts(result.productos);
+          } else {
+            console.error('Error al cargar productos:', result.error);
+          }
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      }
+
+      // Mostrar productos en la interfaz
+      function displayProducts(productos) {
+        const container = document.getElementById('products-container');
+        
+        if (productos.length === 0) {
+          container.innerHTML = '<p class="no-products">No hay productos registrados</p>';
+          return;
+        }
+
+        container.innerHTML = productos.map(producto => `
+          <div class="product-card">
+            <h4>${producto.nombre}</h4>
+            <p><strong>Cantidad:</strong> ${producto.cantidad}</p>
+            <p><strong>Descripción:</strong> ${producto.descripcion || 'Sin descripción'}</p>
+            <p><strong>Fecha:</strong> ${new Date(producto.fecha_creacion).toLocaleDateString()}</p>
+            <div class="product-actions">
+              <button class="edit-btn" onclick="editProduct(${producto.id})">Editar</button>
+              <button class="delete-btn" onclick="deleteProduct(${producto.id})">Eliminar</button>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // Funciones para editar y eliminar (placeholder)
+      function editProduct(id) {
+        alert(`Función de editar producto ${id} - Por implementar`);
+      }
+
+      function deleteProduct(id) {
+        if (confirm('¿Estás seguro de que quieres eliminar este producto?')) {
+          alert(`Función de eliminar producto ${id} - Por implementar`);
+        }
+      }
+
+      // Validación en tiempo real
+      document.getElementById('productQuantity').addEventListener('input', function(e) {
+        const value = parseInt(e.target.value);
+        if (value < 0) {
+          e.target.style.borderColor = '#e42f2f';
+        } else {
+          e.target.style.borderColor = '#ccc';
+        }
+      });
+    </script>
+  </body>
+</html>
